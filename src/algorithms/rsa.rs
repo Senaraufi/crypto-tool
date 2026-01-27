@@ -1,8 +1,7 @@
 // RSA algorithm implementation in Rust
 
-use rand::Rng;
-use rsa::{PublicKey, RsaPrivateKey, RsaPublicKey, PaddingScheme};
-use sha2::{Sha256, Digest};
+use rand::rngs::OsRng;
+use rsa::{pkcs1v15::Pkcs1v15Encrypt, RsaPrivateKey, RsaPublicKey};
 
 pub struct RSA {
     private_key: RsaPrivateKey,
@@ -11,20 +10,26 @@ pub struct RSA {
 
 impl RSA {
     pub fn new(bits: usize) -> Self {
-        let mut rng = rand::thread_rng();
+        let mut rng = OsRng;
         let private_key = RsaPrivateKey::new(&mut rng, bits).expect("Failed to generate a key");
         let public_key = RsaPublicKey::from(&private_key);
-        RSA { private_key, public_key }
+        RSA {
+            private_key,
+            public_key,
+        }
     }
 
     pub fn encrypt(&self, data: &[u8]) -> Vec<u8> {
-        let padding = PaddingScheme::new_pkcs1v15_encrypt();
-        self.public_key.encrypt(&mut rand::thread_rng(), padding, data).expect("Failed to encrypt")
+        let mut rng = OsRng;
+        self.public_key
+            .encrypt(&mut rng, Pkcs1v15Encrypt, data)
+            .expect("Failed to encrypt")
     }
 
     pub fn decrypt(&self, encrypted_data: &[u8]) -> Vec<u8> {
-        let padding = PaddingScheme::new_pkcs1v15_encrypt();
-        self.private_key.decrypt(padding, encrypted_data).expect("Failed to decrypt")
+        self.private_key
+            .decrypt(Pkcs1v15Encrypt, encrypted_data)
+            .expect("Failed to decrypt")
     }
 
     pub fn get_public_key(&self) -> RsaPublicKey {
