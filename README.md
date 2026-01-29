@@ -1,5 +1,12 @@
 # Crypto Tool
 
+[![Rust](https://img.shields.io/badge/rust-1.91.1-orange.svg)](https://www.rust-lang.org/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![Build Status](https://img.shields.io/badge/build-passing-brightgreen.svg)]()
+[![Crates.io](https://img.shields.io/badge/crates.io-v0.1.0-blue.svg)](https://crates.io/)
+
+> A lightweight, high-performance command-line cryptographic toolkit built in Rust. Crypto Tool provides secure implementations of industry-standard encryption algorithms (AES-128/192/256, RSA) and cryptographic hash functions (SHA-256), designed for developers who need reliable encryption, decryption, and data integrity verification in their workflows.
+
 ## Overview
 The Crypto Tool is a command-line application designed for performing various cryptographic operations, including encryption, decryption, and hashing. It implements popular algorithms such as AES and RSA, providing a user-friendly interface for secure data handling.
 
