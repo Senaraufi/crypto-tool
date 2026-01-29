@@ -9,34 +9,63 @@ use cipher::{
 use rand::RngCore;
 
 pub fn encrypt_aes128(key: &[u8; 16], iv: &[u8; 16], data: &[u8]) -> Vec<u8> {
-    // encrypt_padded_vec_mut is provided by BlockEncryptMut + Pkcs7
-    Encryptor::<Aes128>::new(key.into(), iv.into()).encrypt_padded_vec_mut::<Pkcs7>(data)
+    let mut buffer = data.to_vec();
+    let len = data.len();
+    buffer.resize(len + 16, 0);
+    let encrypted_len = Encryptor::<Aes128>::new(key.into(), iv.into())
+        .encrypt_padded_mut::<Pkcs7>(&mut buffer, len)
+        .expect("Failed to encrypt")
+        .len();
+    buffer.truncate(encrypted_len);
+    buffer
 }
 
 pub fn decrypt_aes128(key: &[u8; 16], iv: &[u8; 16], data: &[u8]) -> Vec<u8> {
-    Decryptor::<Aes128>::new(key.into(), iv.into())
-        .decrypt_padded_vec_mut::<Pkcs7>(data)
-        .expect("Failed to decrypt")
+    let mut buffer = data.to_vec();
+    let decrypted = Decryptor::<Aes128>::new(key.into(), iv.into())
+        .decrypt_padded_mut::<Pkcs7>(&mut buffer)
+        .expect("Failed to decrypt");
+    decrypted.to_vec()
 }
 
 pub fn encrypt_aes192(key: &[u8; 24], iv: &[u8; 16], data: &[u8]) -> Vec<u8> {
-    Encryptor::<Aes192>::new(key.into(), iv.into()).encrypt_padded_vec_mut::<Pkcs7>(data)
+    let mut buffer = data.to_vec();
+    let len = data.len();
+    buffer.resize(len + 16, 0);
+    let encrypted_len = Encryptor::<Aes192>::new(key.into(), iv.into())
+        .encrypt_padded_mut::<Pkcs7>(&mut buffer, len)
+        .expect("Failed to encrypt")
+        .len();
+    buffer.truncate(encrypted_len);
+    buffer
 }
 
 pub fn decrypt_aes192(key: &[u8; 24], iv: &[u8; 16], data: &[u8]) -> Vec<u8> {
-    Decryptor::<Aes192>::new(key.into(), iv.into())
-        .decrypt_padded_vec_mut::<Pkcs7>(data)
-        .expect("Failed to decrypt")
+    let mut buffer = data.to_vec();
+    let decrypted = Decryptor::<Aes192>::new(key.into(), iv.into())
+        .decrypt_padded_mut::<Pkcs7>(&mut buffer)
+        .expect("Failed to decrypt");
+    decrypted.to_vec()
 }
 
 pub fn encrypt_aes256(key: &[u8; 32], iv: &[u8; 16], data: &[u8]) -> Vec<u8> {
-    Encryptor::<Aes256>::new(key.into(), iv.into()).encrypt_padded_vec_mut::<Pkcs7>(data)
+    let mut buffer = data.to_vec();
+    let len = data.len();
+    buffer.resize(len + 16, 0);
+    let encrypted_len = Encryptor::<Aes256>::new(key.into(), iv.into())
+        .encrypt_padded_mut::<Pkcs7>(&mut buffer, len)
+        .expect("Failed to encrypt")
+        .len();
+    buffer.truncate(encrypted_len);
+    buffer
 }
 
 pub fn decrypt_aes256(key: &[u8; 32], iv: &[u8; 16], data: &[u8]) -> Vec<u8> {
-    Decryptor::<Aes256>::new(key.into(), iv.into())
-        .decrypt_padded_vec_mut::<Pkcs7>(data)
-        .expect("Failed to decrypt")
+    let mut buffer = data.to_vec();
+    let decrypted = Decryptor::<Aes256>::new(key.into(), iv.into())
+        .decrypt_padded_mut::<Pkcs7>(&mut buffer)
+        .expect("Failed to decrypt");
+    decrypted.to_vec()
 }
 
 pub fn generate_random_iv() -> [u8; 16] {
